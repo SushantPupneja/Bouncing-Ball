@@ -1,0 +1,82 @@
+import java.awt.*;
+import java.util.*;
+import java.awt.event.ActionListener; 
+import javax.swing.*;
+
+class Game1 extends Canvas {
+
+	
+		private static final int	DIA_BALL = 40; 				// Diameter of the ball
+		private static final int	GRAVITY = 3;				// amount of velocity increased in y direction as a result of gravity
+		private static final int	DELAY = 50;    				// for ball to move slow
+		private static final int	X_START = DIA_BALL / 2;		//starting x location of the ball
+		private static final int	Y_START = 100; 				//starting y location of the ball
+		private static final int	X_VEL = 5;					//starting x velocity;
+		private static final int	BOUNCE_REDUCE = 1;		//amount of y velocity decreased after one bounce
+		
+		
+		private int	x_vel = X_VEL;							//starting x velocity
+		private int	y_vel = 0;							//starting y velocity
+		
+		private static Game1 ball;									
+		private static Frame f1;
+
+
+
+	
+		Game1 () {
+		
+			setSize(120,120);
+			setBackground(Color.white);
+		
+		}
+
+		public void paint(Graphics g) {
+
+			g.drawOval(X_START, Y_START, DIA_BALL, DIA_BALL);
+			g.fillOval(X_START, Y_START, DIA_BALL, DIA_BALL);
+		
+
+		}
+
+
+		public static void main(String args[])	{
+		
+			f1 = new Frame ("");
+			f1.setSize(300,300);
+			f1.setVisible(true);
+		
+		 	ball = new Game1();
+		
+			f1.add(ball);
+
+		while (ball.getX() < f1.getWidth()) {
+	
+			ball.moveball();
+			ball.strike();
+			
+			try {
+    			Thread.sleep(50);                 //1000 milliseconds is one second.
+			} 
+			catch(InterruptedException ex) {
+    			Thread.currentThread().interrupt();
+			}	
+		}
+	
+	}
+		private void moveball() {
+
+			y_vel += GRAVITY;
+			ball.move(x_vel,y_vel);
+			System.out.println("value of y" +y_vel);
+		}
+
+		private void strike() {
+		
+			if (ball.getY() > f1.getHeight() - DIA_BALL)	{
+				y_vel = -y_vel + BOUNCE_REDUCE;
+				int diff = ball.getY() - (f1.getHeight() - DIA_BALL);
+				ball.move(0,-2 * diff);
+			}
+	}
+}
